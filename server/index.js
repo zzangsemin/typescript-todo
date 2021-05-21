@@ -6,11 +6,25 @@ const mongoose = require('mongoose');
 
 const app = express();
 
-const { PORT } = process.env;
+const { PORT, MONGO_URL } = process.env;
+
+mongoose
+  .connect(MONGO_URL, {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log('Connected to MongoDB');
+  })
+  .catch((e) => {
+    console.error(e);
+  });
 
 app.use(logger('dev'));
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 app.get('/', (req, res) => {
   res.send('hello world');
