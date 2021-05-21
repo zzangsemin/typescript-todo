@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const logger = require('morgan');
 const mongoose = require('mongoose');
+const router = require('./routes');
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use(express.urlencoded({ extended: false }));
 app.get('/', (req, res) => {
   res.send('hello world');
 });
+app.use('/', router);
 
 const port = PORT || 4000;
 app.listen(port, () => {
