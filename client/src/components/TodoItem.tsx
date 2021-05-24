@@ -62,7 +62,7 @@ type Props = {
   text: string;
 };
 
-const TodoItem: React.FC<Props> = ({ done, text }) => {
+function TodoItem({ done, text }: Props) {
   return (
     <TodoItemBlock>
       <CheckCircle done={done}>{done && <MdDone />}</CheckCircle>
@@ -72,6 +72,6 @@ const TodoItem: React.FC<Props> = ({ done, text }) => {
       </Remove>
     </TodoItemBlock>
   );
-};
+}
 
 export default React.memo(TodoItem);
