@@ -2,6 +2,8 @@ const express = require('express');
 const todoRouter = express.Router();
 const todoCtrl = require('./todo');
 
+// GET /todo
+todoRouter.get('/', todoCtrl.list);
 /* POST /todo
 {
   content: '내용'

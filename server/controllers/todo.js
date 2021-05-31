@@ -1,7 +1,16 @@
 const mongoose = require('mongoose');
 const Todo = require('../models/todo');
 
-const write = async (req, res) => {
+exports.list = async (req, res) => {
+  try {
+    const todos = await Todo.find().exec();
+    res.json(todos);
+  } catch (e) {
+    res.status(500).send(e);
+  }
+};
+
+exports.write = async (req, res) => {
   const { content } = req.body;
   const todo = new Todo({
     content,
@@ -15,7 +24,7 @@ const write = async (req, res) => {
   }
 };
 
-const change = async (req, res) => {
+exports.change = async (req, res) => {
   const { id } = req.params;
   try {
     const todo = await Todo.findById(id).exec();
@@ -31,7 +40,7 @@ const change = async (req, res) => {
   }
 };
 
-const remove = async (req, res) => {
+exports.remove = async (req, res) => {
   const { id } = req.params;
   try {
     await Todo.findByIdAndDelete(id).exec();
@@ -40,5 +49,3 @@ const remove = async (req, res) => {
     res.status(500).send(e);
   }
 };
-
-module.exports = { write, remove, change };
