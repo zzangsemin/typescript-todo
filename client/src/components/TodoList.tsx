@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import TodoItem from './TodoItem';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../modules';
+import { fetchTodos } from '../modules/todos';
+import { Todo } from '../api/todoAPI';
 
 const TodoListBlock = styled.div`
   flex: 1;
@@ -10,20 +14,26 @@ const TodoListBlock = styled.div`
 `;
 
 function TodoList() {
+  const todos = useSelector((state: RootState) => state.todos);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchTodos());
+  }, []);
+
+  if (todos.isLoading) return <div>Loading...</div>;
+  if (todos.error) return <div>{todos.error}</div>;
+  console.log(todos.todos);
   return (
     <TodoListBlock>
-      {/* {todos.map((todo) => (
+      {todos.todos.map((todo: Todo) => (
         <TodoItem
-          key={todo.id}
-          id={todo.id}
-          text={todo.text}
-          done={todo.done}
+          key={todo._id}
+          id={todo._id}
+          text={todo.content}
+          done={todo.flag}
         />
-      ))} */}
-      <TodoItem text="프로젝트 생성하기" done={true} />
-      <TodoItem text="컴포넌트 스타일링 하기" done={true} />
-      <TodoItem text="Context 만들기" done={false} />
-      <TodoItem text="기능 구현하기" done={false} />
+      ))}
     </TodoListBlock>
   );
 }

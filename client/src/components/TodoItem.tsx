@@ -60,9 +60,10 @@ const Text = styled.div<{ done: boolean }>`
 type Props = {
   done: boolean;
   text: string;
+  id: string;
 };
 
-function TodoItem({ done, text }: Props) {
+function TodoItem({ done, text, id }: Props) {
   return (
     <TodoItemBlock>
       <CheckCircle done={done}>{done && <MdDone />}</CheckCircle>

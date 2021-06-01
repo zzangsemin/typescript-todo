@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import { RootState } from '../modules';
 
 const TodoHeadBlock = styled.div`
   padding-top: 48px;
@@ -26,6 +28,9 @@ const TodoHeadBlock = styled.div`
 `;
 
 function TodoHead() {
+  const todos = useSelector((state: RootState) => state.todos);
+  const undoneTasks = todos.todos.filter((todo) => !todo.flag);
+
   const today = new Date();
   const dateString = today.toLocaleDateString('ko-KR', {
     year: 'numeric',
@@ -38,7 +43,7 @@ function TodoHead() {
     <TodoHeadBlock>
       <h1>{dateString}</h1>
       <div className="day">{dayName}</div>
-      <div className="tasks-left">할 일 n개 남음</div>
+      <div className="tasks-left">할 일 {undoneTasks.length}개 남음</div>
     </TodoHeadBlock>
   );
 }
