@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { MdAdd } from 'react-icons/md';
+import { useDispatch } from 'react-redux';
+import { fetchAddTodo } from '../modules/todos';
 
 const CircleButton = styled.button<{ open: boolean }>`
   background: #38d9a9;
@@ -75,6 +77,7 @@ const Input = styled.input`
 `;
 
 function TodoCreate() {
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
 
@@ -83,7 +86,7 @@ function TodoCreate() {
     setValue(e.target.value);
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // 새로고침 방지
-    console.log(value);
+    dispatch(fetchAddTodo(value));
     setValue('');
     setOpen(false);
   };

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Todo, TodoResult, getTodos } from '../api/todoAPI';
+import { Todo, TodoResult, getTodos, addTodo } from '../api/todoAPI';
 import { Dispatch } from 'redux';
 
 interface TodoState {
@@ -32,11 +32,20 @@ const todosSlice = createSlice({
       state.error = null;
     },
     getTodosFailure: loadingFailed,
+    addTodoSuccess(state, { payload }: PayloadAction<Todo>) {
+      state.todos.push(payload);
+      state.isLoading = false;
+      state.error = null;
+    },
   },
 });
 
-export const { getTodosStart, getTodosSuccess, getTodosFailure } =
-  todosSlice.actions;
+export const {
+  getTodosStart,
+  getTodosSuccess,
+  getTodosFailure,
+  addTodoSuccess,
+} = todosSlice.actions;
 export default todosSlice.reducer;
 
 export const fetchTodos = () => async (dispatch: Dispatch) => {
@@ -44,6 +53,16 @@ export const fetchTodos = () => async (dispatch: Dispatch) => {
     dispatch(getTodosStart());
     const todos = await getTodos();
     dispatch(getTodosSuccess(todos));
+  } catch (err) {
+    dispatch(getTodosFailure(err.toString()));
+  }
+};
+
+export const fetchAddTodo = (content: string) => async (dispatch: Dispatch) => {
+  try {
+    dispatch(getTodosStart());
+    const todo = await addTodo(content);
+    dispatch(addTodoSuccess(todo));
   } catch (err) {
     dispatch(getTodosFailure(err.toString()));
   }

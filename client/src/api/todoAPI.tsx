@@ -22,3 +22,14 @@ export async function getTodos(): Promise<TodoResult> {
     throw err;
   }
 }
+
+export async function addTodo(content: string): Promise<Todo> {
+  const url = 'http://localhost:4000/todo';
+
+  try {
+    const todoResponse = await axios.post<Todo>(url, { content });
+    return todoResponse.data;
+  } catch (err) {
+    throw err;
+  }
+}
