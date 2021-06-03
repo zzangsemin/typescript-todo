@@ -44,7 +44,7 @@ exports.remove = async (req, res) => {
   const { id } = req.params;
   try {
     await Todo.findByIdAndDelete(id).exec();
-    res.status(204).end();
+    res.send(id);
   } catch (e) {
     res.status(500).send(e);
   }
