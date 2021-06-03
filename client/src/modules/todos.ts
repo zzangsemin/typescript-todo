@@ -1,5 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Todo, TodoResult, getTodos, addTodo } from '../api/todoAPI';
+import {
+  Todo,
+  TodoResult,
+  getTodos,
+  addTodo,
+  deleteTodo,
+} from '../api/todoAPI';
 import { Dispatch } from 'redux';
 
 interface TodoState {
@@ -26,44 +32,54 @@ const todosSlice = createSlice({
   initialState: todoInitialState,
   reducers: {
     getTodosStart: startLoading,
+    getTodosFailure: loadingFailed,
     getTodosSuccess(state, { payload }: PayloadAction<TodoResult>) {
       state.todos = payload.todos;
       state.isLoading = false;
       state.error = null;
     },
-    getTodosFailure: loadingFailed,
     addTodoSuccess(state, { payload }: PayloadAction<Todo>) {
       state.todos.push(payload);
+      state.isLoading = false;
+      state.error = null;
+    },
+    deleteTodoSuccess(state, { payload }: PayloadAction<string>) {
+      state.todos = state.todos.filter((todo) => todo._id !== payload);
       state.isLoading = false;
       state.error = null;
     },
   },
 });
 
-export const {
-  getTodosStart,
-  getTodosSuccess,
-  getTodosFailure,
-  addTodoSuccess,
-} = todosSlice.actions;
+export const TodoActions = todosSlice.actions;
 export default todosSlice.reducer;
 
 export const fetchTodos = () => async (dispatch: Dispatch) => {
   try {
-    dispatch(getTodosStart());
+    dispatch(TodoActions.getTodosStart());
     const todos = await getTodos();
-    dispatch(getTodosSuccess(todos));
+    dispatch(TodoActions.getTodosSuccess(todos));
   } catch (err) {
-    dispatch(getTodosFailure(err.toString()));
+    dispatch(TodoActions.getTodosFailure(err.toString()));
   }
 };
 
 export const fetchAddTodo = (content: string) => async (dispatch: Dispatch) => {
   try {
-    dispatch(getTodosStart());
+    dispatch(TodoActions.getTodosStart());
     const todo = await addTodo(content);
-    dispatch(addTodoSuccess(todo));
+    dispatch(TodoActions.addTodoSuccess(todo));
   } catch (err) {
-    dispatch(getTodosFailure(err.toString()));
+    dispatch(TodoActions.getTodosFailure(err.toString()));
+  }
+};
+
+export const fetchDeleteTodo = (id: string) => async (dispatch: Dispatch) => {
+  try {
+    dispatch(TodoActions.getTodosStart());
+    const todo = await deleteTodo(id);
+    dispatch(TodoActions.deleteTodoSuccess(todo));
+  } catch (err) {
+    dispatch(TodoActions.getTodosFailure(err.toString()));
   }
 };
