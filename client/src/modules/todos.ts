@@ -5,6 +5,7 @@ import {
   getTodos,
   addTodo,
   deleteTodo,
+  changeTodo,
 } from '../api/todoAPI';
 import { Dispatch } from 'redux';
 
@@ -48,6 +49,14 @@ const todosSlice = createSlice({
       state.isLoading = false;
       state.error = null;
     },
+    changeTodoSuccess(state, { payload }: PayloadAction<Todo>) {
+      state.todos = state.todos.map((todo) => {
+        if (todo._id === payload._id) return payload;
+        else return todo;
+      });
+      state.isLoading = false;
+      state.error = null;
+    },
   },
 });
 
@@ -79,6 +88,16 @@ export const fetchDeleteTodo = (id: string) => async (dispatch: Dispatch) => {
     dispatch(TodoActions.getTodosStart());
     const todo = await deleteTodo(id);
     dispatch(TodoActions.deleteTodoSuccess(todo));
+  } catch (err) {
+    dispatch(TodoActions.getTodosFailure(err.toString()));
+  }
+};
+
+export const fetchChangeTodo = (id: string) => async (dispatch: Dispatch) => {
+  try {
+    dispatch(TodoActions.getTodosStart());
+    const todo = await changeTodo(id);
+    dispatch(TodoActions.changeTodoSuccess(todo));
   } catch (err) {
     dispatch(TodoActions.getTodosFailure(err.toString()));
   }

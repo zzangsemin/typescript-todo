@@ -44,3 +44,14 @@ export async function deleteTodo(id: string): Promise<string> {
     throw err;
   }
 }
+
+export async function changeTodo(id: string): Promise<Todo> {
+  const url = `http://localhost:4000/todo/${id}`;
+
+  try {
+    const todoResponse = await axios.get<Todo>(url);
+    return todoResponse.data;
+  } catch (err) {
+    throw err;
+  }
+}

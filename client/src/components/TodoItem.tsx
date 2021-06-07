@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { MdDone, MdDelete } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
-import { fetchDeleteTodo } from '../modules/todos';
+import { fetchDeleteTodo, fetchChangeTodo } from '../modules/todos';
 
 const Remove = styled.div`
   display: flex;
@@ -68,12 +68,15 @@ type Props = {
 function TodoItem({ done, text, id }: Props) {
   const dispatch = useDispatch();
   const onRemove = (id: string) => dispatch(fetchDeleteTodo(id));
+  const onToggle = (id: string) => dispatch(fetchChangeTodo(id));
 
   return (
     <TodoItemBlock>
-      <CheckCircle done={done}>{done && <MdDone />}</CheckCircle>
+      <CheckCircle done={done} onClick={() => onToggle(id)}>
+        {done && <MdDone />}
+      </CheckCircle>
       <Text done={done}>{text}</Text>
-      <Remove onClick={(e) => onRemove(id)}>
+      <Remove onClick={() => onRemove(id)}>
         <MdDelete />
       </Remove>
     </TodoItemBlock>

@@ -23,7 +23,7 @@ function TodoList() {
 
   if (todos.isLoading) return <div>Loading...</div>;
   if (todos.error) return <div>{todos.error}</div>;
-  console.log(todos.todos);
+  // console.log(todos.todos);
   return (
     <TodoListBlock>
       {todos.todos.map((todo: Todo) => (
